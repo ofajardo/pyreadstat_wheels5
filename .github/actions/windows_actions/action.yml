@@ -1,0 +1,42 @@
+name: Windows Specific steps
+description: "Runs specific steps required for windows"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout libiconv
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      with:
+        repository: kiyolee/libiconv-win-build 
+        ref: dff1030d222ba934e0f4a9cdab9c34134f072f68 # v1.18
+        path: libiconv-win-build
+        submodules: true
+        persist-credentials: false
+
+    - name: Checkout zlib
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      with:
+        repository: kiyolee/zlib-win-build
+        ref: 30623e05e64fe4b97f2073ddaf8d3ba0e99d7249
+        path: zlib-win-build
+        submodules: true
+        persist-credentials: false
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v2
+
+    - name: build libiconv
+      run: |
+        msbuild.exe libiconv-win-build/build-VS2022-MT/libiconv.sln /property:Configuration=Release;Platform=X64
+        copy libiconv-win-build\\include\\iconv.h pyreadstat\\win_libs\\64bit
+        copy libiconv-win-build\\build-VS2022-MT\\x64\\Release\\libiconv-static.lib  pyreadstat\\win_libs\\64bit
+      shell: cmd
+
+    - name: build zlib
+      run: |
+        msbuild.exe zlib-win-build/build-VS2022-MT/zlib.sln /property:Configuration=Release;Platform=X64
+        copy zlib-win-build\\zlib.h pyreadstat\\win_libs\\64bit
+        copy zlib-win-build\\zconf.h pyreadstat\\win_libs\\64bit
+        copy zlib-win-build\\build-VS2022-MT\\x64\\Release\\libz-static.lib  pyreadstat\\win_libs\\64bit
+      shell: cmd
+
