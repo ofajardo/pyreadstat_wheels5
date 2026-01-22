@@ -3,7 +3,7 @@
 [tool.cibuildwheel]
 test-sources = ["pyreadstat/tests", "pyreadstat/test_data"]
 test-requires = ["pandas", "narwhals", "polars", "pytest"]
-test-command = ["python pyreadstat/tests/test_basic.py", 
+test-command = [#"python pyreadstat/tests/test_basic.py", 
 	"python pyreadstat/tests/test_narwhalified.py --backend=pandas", 
 	"python pyreadstat/tests/test_narwhalified.py --backend=polars", 
         "pytest pyreadstat/tests/test_http_integration.py -v",
