@@ -2,7 +2,7 @@ name: Build Pyreadstat wheels
 
 env:
   # A commit hash for the pyreadstat repo, for which to build wheels. 
-  SOURCE_REF_TO_BUILD: 6ca9ef5e7c95aac4f33d93ca549a5d39ec028d0d
+  SOURCE_REF_TO_BUILD: f34c2d5d350b082e7abd71e64744694ea9d7892f
 
 on: [push]
 
