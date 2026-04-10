@@ -2,10 +2,12 @@
 
 [tool.cibuildwheel]
 test-sources = ["pyreadstat/tests", "pyreadstat/test_data"]
-test-requires = ["pandas", "narwhals", "polars", "pytest"]
+test-requires = ["pandas", "narwhals", "polars", "pytest", "mypy", "pytest-mypy-plugins", "pandas-stubs", ]
 test-command = ["python pyreadstat/tests/test_basic.py", 
 	"python pyreadstat/tests/test_narwhalified.py --backend=pandas", 
 	"python pyreadstat/tests/test_narwhalified.py --backend=polars", 
-        "pytest pyreadstat/tests/test_http_integration.py -v",
+        "python pyreadstat/tests/test_http_integration.py",
+	"python pyreadstat/tests/test_runtime_types.py",
+	"pytest pyreadstat/tests/test_typing.yml --mypy-ini-file=pyreadstat/tests/test_mypy_setup.ini",
 ]
 
