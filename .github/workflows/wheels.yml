@@ -2,7 +2,7 @@ name: Build Pyreadstat wheels
 
 env:
   # A commit hash for the pyreadstat repo, for which to build wheels. 
-  SOURCE_REF_TO_BUILD: a071ee06eecbbc23884978f09521310c3f5887cc
+  SOURCE_REF_TO_BUILD: 2c764bd3a4e7e229636530db1df451ba613b2f4d
 
 on: [push]
 
@@ -28,12 +28,12 @@ jobs:
 
     steps:
       - name: Checkout pyreadstat-wheels
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@v6 
         with:
           persist-credentials: false
 
       - name: Checkout pyreadstat
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@v6
         with:
           repository: Roche/pyreadstat
           ref: ${{ env.SOURCE_REF_TO_BUILD }}
