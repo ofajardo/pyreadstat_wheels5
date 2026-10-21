@@ -23,7 +23,7 @@ jobs:
           - [macos-14, macosx_arm64, ""]
           - [windows-2022, win_amd64, ""]
 
-        python: ["cp310", "cp311", "cp312", "cp313", "cp314"]
+        python: ["cp310", "cp311", "cp312", "cp313", "cp314", "cp315"]
         #python: ["cp312"]
 
     steps:
@@ -47,7 +47,7 @@ jobs:
         uses: ./.github/actions/windows_actions
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@9c00cb4f6b517705a3794b22395aedc36257242c  # v3.2.1
+        uses: pypa/cibuildwheel@8c2dcd2e96041a619f5ff03c9638d7941e2553a4  # v4.3.3
         env:
           CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
           SRC: ${{ github.workspace }}/pyreadstat
