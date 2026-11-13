@@ -25,18 +25,29 @@ runs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v3
 
+    # There is no static CRT (-MT) build for ARM64, so the ARM64 libraries use the
+    # dynamic CRT, as Python extensions do.
+    # WholeProgramOptimization is disabled because /GL objects can only be linked by the
+    # exact same MSVC version; the runner may build these libs and the extension with
+    # different toolsets (C1047).
     - name: build libiconv
       run: |
-        msbuild.exe libiconv-win-build/build-VS2022-MT/libiconv.sln /property:Configuration=Release;Platform=X64
+        msbuild.exe libiconv-win-build/%BUILD_DIR%/libiconv.sln /property:Configuration=Release;Platform=%PLATFORM% /p:WholeProgramOptimization=false
         copy libiconv-win-build\\include\\iconv.h pyreadstat\\win_libs\\64bit
-        copy libiconv-win-build\\build-VS2022-MT\\x64\\Release\\libiconv-static.lib  pyreadstat\\win_libs\\64bit
+        copy libiconv-win-build\\%BUILD_DIR%\\%PLATFORM%\\Release\\libiconv-static.lib  pyreadstat\\win_libs\\64bit
       shell: cmd
+      env:
+        BUILD_DIR: ${{ runner.arch == 'ARM64' && 'build-VS2022-arm64' || 'build-VS2022-MT' }}
+        PLATFORM: ${{ runner.arch == 'ARM64' && 'ARM64' || 'x64' }}
 
     - name: build zlib
       run: |
-        msbuild.exe zlib-win-build/build-VS2022-MT/zlib.sln /property:Configuration=Release;Platform=X64
+        msbuild.exe zlib-win-build/%BUILD_DIR%/zlib.sln /property:Configuration=Release;Platform=%PLATFORM% /p:WholeProgramOptimization=false
         copy zlib-win-build\\zlib.h pyreadstat\\win_libs\\64bit
         copy zlib-win-build\\zconf.h pyreadstat\\win_libs\\64bit
-        copy zlib-win-build\\build-VS2022-MT\\x64\\Release\\libz-static.lib  pyreadstat\\win_libs\\64bit
+        copy zlib-win-build\\%BUILD_DIR%\\%PLATFORM%\\Release\\libz-static.lib  pyreadstat\\win_libs\\64bit
       shell: cmd
+      env:
+        BUILD_DIR: ${{ runner.arch == 'ARM64' && 'build-VS2022-arm64' || 'build-VS2022-MT' }}
+        PLATFORM: ${{ runner.arch == 'ARM64' && 'ARM64' || 'x64' }}
 
